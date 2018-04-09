@@ -74,13 +74,10 @@ $1 != p1 || $2 != p2 || $4 != p4 || $5 != p5 || $6 != p6 || $8 != p8 || abs($3-p
 		
 	#for (j=0; j<dup_type; j++) {print dup_count[j];}
 	
-	delete line;
 	delete dups;
     delete belowmapq;
 	delete pos1;
 	delete pos2;
-	delete x;
-	delete y;
     delete mapq1;
     delete mapq2;
     
