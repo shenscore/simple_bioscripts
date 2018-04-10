@@ -12,12 +12,12 @@ BEGIN{
                     tot=0;
 		}
 	}
-	outname = sprintf("%s/split%d", dir, name);
+	outname = sprintf("%s/my_split%d", dir, name);
 	print > outname;
 	p1=$1;p2=$2;p4=$4;p5=$5;p6=$6;p8=$8;
 	tot++;
 }
 END {
-    sysstring = sprintf("touch %s/osplit_done", dir);
+    sysstring = sprintf("touch %s/mysplit_done", dir);
     system(sysstring);
 }

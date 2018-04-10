@@ -6,18 +6,19 @@ qsub -o $PWD/log -j oe -N osplit <<- DEDUP
     awk -v dir=$PWD -f split.awk $outputdir/merged_sort.txt
 DEDUP
 
-while [ ! -e osplit_done ]
+while [ ! -e mysplit_done ]
     do
         sleep 60
 done
-rm osplit_done
+rm mysplit_done
 
 #submit dups.awk job after split_rmdups.awk
 waitstring='-W depend=afterokarray'
-array=`ls $outputdir/split* | sed 's/.*split//g' | sort -n | xargs | awk -vOFS='-' '{print $1,$NF}'`
-split_end=`ls $outputdir/split* | sed 's/.*split//g' | sort -n | xargs | awk  '{print $NF}'`
+array=`ls $PWD/my_split* | sed 's/.*split//g' | sort -n | xargs | awk -vOFS='-' '{print $1,$NF}'`
+split_end=`ls $PWD/my_split* | sed 's/.*split//g' | sort -n | xargs | awk  '{print $NF}'`
 jobarray_id=`qsub -t $array -o $PWD/check_uniq.log -j oe -N check_uniq <<- SPLITDEDUP
-    awk -f check_uniq.awk -v name=\\${PBS_ARRAYID} $PWD/split\\${PBS_ARRAYID} > \\${PBS_ARRAYID}.uniq
+    awk -f check_uniq.awk -v name=\\${PBS_ARRAYID} $PWD/my_split\\${PBS_ARRAYID} > \\${PBS_ARRAYID}.uniq
+    rm $PWD/my_split\\${PBS_ARRAYID}
 SPLITDEDUP`
 
 wait
