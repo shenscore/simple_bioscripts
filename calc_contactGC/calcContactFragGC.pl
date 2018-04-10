@@ -2,7 +2,7 @@
 #arguement2 contact fragment file
 
 
-my ($fastaF,$contactFrag) = @ARGV;
+my $fastaF = '/home/shenwei/wshen/dm_hic/SRP009838/genome/dm3.fa';
 
 #READING FASTA
 use Bio::Seq;
@@ -16,11 +16,7 @@ while($seq = $seqio->next_seq){
 }
 
 
-#calculate GC
-# my @gc_rate;
-open FF, $contactFrag or die $!;
-# open FF, contactFrag;
-while(<FF>){
+while(<>){
     chomp;
     my ($chr1, $sta1, $end1, $chr2, $sta2, $end2) = split "\t";
     if (!$end1 || !$end2) {next;}
@@ -28,14 +24,12 @@ while(<FF>){
     my $seq2 = $fasta{$chr2}->subseq($sta2,$end2);
     my $totalSeq = $seq1 . $seq2;
     my $gc_ratio = &computeGC($totalSeq);
-    # push @gc_rate, $gc_ratio;
-#    print $totalSeq . "\n";
     print $gc_ratio . "\n";
 }
 close FF;
+
+
 #function computeGC
-
-
 sub computeGC {
 	my $string = $_[0];
 	my $number = () = $string =~ /[g,c,G,C]/g;
