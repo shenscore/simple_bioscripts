@@ -1,9 +1,7 @@
 #need merged_sort.txt file
-
-qsub -o $PWD/log -j oe -N osplit <<- DEDUP
-    source $usePath
-    $load_cluster
-    awk -v dir=$PWD -f split.awk $outputdir/merged_sort.txt
+script_dir=/home/shenwei/script/hic_resample
+qsub -o $PWD/mysplitlog -j oe -N mysplit <<- DEDUP
+    awk -v dir=$PWD -f ${script_dir}/split.awk $PWD/merged_sort.txt
 DEDUP
 
 while [ ! -e mysplit_done ]
@@ -17,7 +15,7 @@ waitstring='-W depend=afterokarray'
 array=`ls $PWD/my_split* | sed 's/.*split//g' | sort -n | xargs | awk -vOFS='-' '{print $1,$NF}'`
 split_end=`ls $PWD/my_split* | sed 's/.*split//g' | sort -n | xargs | awk  '{print $NF}'`
 jobarray_id=`qsub -t $array -o $PWD/check_uniq.log -j oe -N check_uniq <<- SPLITDEDUP
-    awk -f check_uniq.awk -v name=\\${PBS_ARRAYID} $PWD/my_split\\${PBS_ARRAYID} > \\${PBS_ARRAYID}.uniq
+    awk -f ${script_dir}/check_uniq.awk -v name=\\${PBS_ARRAYID} $PWD/my_split\\${PBS_ARRAYID} > \\${PBS_ARRAYID}.uniq
     rm $PWD/my_split\\${PBS_ARRAYID}
 SPLITDEDUP`
 

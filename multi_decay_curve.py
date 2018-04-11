@@ -65,8 +65,6 @@ fig = plt.figure()
 #ax.set_xlim(left=1e4,right=)
 for k, v in dis_IF.items():
     plt.loglog(v[0], v[1], label=k, linewidth=0.7)
-#for i in range(len(labelList)):
-#    ax.plot(disIF[labelList[i]][0], disIF[labelList[i]][1])
     
 plt.xlabel('log10(distance)')
 plt.ylabel('log10(reads fraction)')
