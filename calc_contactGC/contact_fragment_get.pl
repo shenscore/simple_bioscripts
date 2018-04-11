@@ -50,9 +50,6 @@ if ($opt_o) {
 if ($opt_q) {
   $mapq_threshold = $opt_q;
 }
-if (scalar(@ARGV)==0) {
-  print STDOUT "No input file specified, reading from input stream\n";
-}
 
 my $dangling_junction = substr $ligation_junction, length($ligation_junction)/2;
 

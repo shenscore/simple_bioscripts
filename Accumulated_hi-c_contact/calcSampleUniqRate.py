@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sys
 
-data=np.loadtxt(sys.argv[1])
+data=np.loadtxt(sys.argv[1],dtype=str)
 plotname = sys.argv[2]
 plottmp = sys.argv[3]
 simulTimes=100
