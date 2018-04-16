@@ -18,8 +18,6 @@ if ($opt_s) {
 }
 
 
-my $dangling_junction = substr $ligation_junction, length($ligation_junction)/2;
-
 # Global variables for calculating statistics
 my %chromosomes;
 

@@ -1,5 +1,7 @@
 #!/usr/bin/awk -f
 # this is a modified script of dup.awk(juicer)
+# consider two dups.txt files have already been merged and sorted. And the merged file should contain tail marker at filed $17 maked (1 or 2)
+# this script will output the consistant dups count of two file. consistance is defined by dup.awk(juicer)
 
 function abs(v) {
 	return v<0?-v:v;
@@ -29,63 +31,55 @@ BEGIN {
 	i=0;
 	wobble1=4;
 	wobble2=4;
-    uniq=0;
 }
 # strand, chromosome, fragment match previous; first position (sorted) within wobble1
 
 $1 == p1 && $2 == p2 && abs($3-p3)<=wobble1 && $4 == p4 && $5 == p5 && $6 == p6 && $8 == p8  {
 	# add to array of potential duplicates
+	line[i]=($1" "$2" "$3" "$4" "$5" "$6" "$7" "$8);
 	pos1[i]=$3;
 	pos2[i]=$7;
-    mapq1[i]=$9;
-    mapq2[i]=$12;
 	i++;
 }
 # not a duplicate, one of the fields doesn't match
 $1 != p1 || $2 != p2 || $4 != p4 || $5 != p5 || $6 != p6 || $8 != p8 || abs($3-p3)>wobble1 {
 	
-    
-    for (j=0; j<i; j++) {
+    dup_type=0;
+	for (j=0; j<i; j++) {
         # only consider reads that aren't already marked duplicate
-        # (no daisy-chaining)
-        
-        if (!(j in dups) || !(j in belowmapq)) {
+		# (no daisy-chaining)
+		if (!(j in dups)) {
             #record count of 1 and 2
-            if ( mapq1[j]<1 || mapq2[j]<1 ){
-                print 0; #below mapQ, marked as 0
-                next;
-            }
-            uniq++;
-            print name"-"uniq;
-            for (k=j+1; k<i; k++) {
-                if ( mapq1[k]<1 || mapq2[k]<1 ){
-                        print 0; #below mapQ, marked as 0
-                        belowmapq[k]++;
-                        next;
-                }
-            # check each item in array against all the rest 
-                if (tooclose(pos1[j],pos1[k],pos2[j],pos2[k])) {
-                    dups[k]++;
-                    print name"-"uniq;
-                }
-            }    
-        }
-    }
+			dup_count[dup_type]++;
+
+		for (k=j+1; k<i; k++) {
+		# check each item in array against all the rest 
+			if (tooclose(pos1[j],pos1[k],pos2[j],pos2[k])) {
+				dups[k]++;
+				dup_count[dup_type]++;
+			}
+		}
+        dup_type++;
+		}
+	}
 		
-	#for (j=0; j<dup_type; j++) {print dup_count[j];}
+	for (j=0; j<dup_type; j++) {print dup_count[j];}
 	
+	delete line;
 	delete dups;
-    delete belowmapq;
 	delete pos1;
 	delete pos2;
-    delete mapq1;
-    delete mapq2;
+	delete tile;
+	delete x;
+	delete y;
+	delete optdups;
+	delete dup_count;
+    
     
 	i = 1;
+	line[0]=($1" "$2" "$3" "$4" "$5" "$6" "$7" "$8);
 	pos1[0]=$3;
 	pos2[0]=$7;
-    mapq1[0]=$9;
-    mapq2[0]=$12;
 }
 
 # always reset the fields we're checking against on each read 
@@ -93,37 +87,29 @@ $1 != p1 || $2 != p2 || $4 != p4 || $5 != p5 || $6 != p6 || $8 != p8 || abs($3-p
 END {
 	if (i > 1) {
 		# same code as above, just process final potential duplicate array
-
+		dup_type=0;
 		for (j=0; j<i; j++) {
             # only consider reads that aren't already marked duplicate
 			# (no daisy-chaining)
-			if (!(j in dups) || !(j in belowmapq)) {
-                if ( mapq1[j]<1 || mapq2[j]<1 ){
-                    print 0; #below mapQ, marked as 0
-                    next;
-                }
-                uniq++;
-                print name"-"uniq;
+			if (!(j in dups)) {
                 #record count of 1 and 2
+    			dup_count[dup_type]++;
+
 				for (k=j+1; k<i; k++) {
-                    if ( mapq1[k]<1 || mapq2[k]<1 ){
-                        print 0; #below mapQ, marked as 0
-                        belowmapq[k]++;
-                        next;
-                    }
 					# check each item in array against all the rest 
 					if (tooclose(pos1[j],pos1[k],pos2[j],pos2[k])) {
 						dups[k]++;
-                        print name"-"uniq;
+						dup_count[dup_type]++;
+
 					}
 				}
+                dup_type++;
 			}
 		}
+		
+		for (j=0; j<dup_type; j++) {print dup_count[j];}
 	}
 	else if (i == 1) {
-        if ( mapq1[i]<1 || mapq2[i]<1 ){
-            print 0; #below mapQ, marked as 0
-        }
-		else{uniq++; print name"-"uniq;}
+		print 1;
 	}
 }
