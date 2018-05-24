@@ -166,10 +166,10 @@ sub get_paired_fragment {
 	my @out;
 	if ($_[0] == 0){
 		#avoid out boundary
+		@out = ($_[1], $_[2], $three_prime_border);
+	}else{
 		my $end = $_[2] + $read_len - 1 < $chromosomes{$_[1]}[-1] ?  $_[2] + $read_len - 1 : $chromosomes{$_[1]}[-1];
 		@out = ($_[1], $five_prime_border, $end); #chromosome start end
-	}else{
-		@out = ($_[1], $_[2], $three_prime_border);
 	}
 	my $out = \@out;
 	return $out;
