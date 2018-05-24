@@ -1,6 +1,6 @@
 #for resample hic simplify.txt file
 
-resample_by_size <- function(sample_size){
+resample_by_size <- function(sample_size, circle = 100){
 
   uniq_series <- sapply(1:circle, resample_once, sample_size = sample_size)
   return(mean(uniq_series))
