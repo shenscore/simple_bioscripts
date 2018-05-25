@@ -72,8 +72,6 @@ my $under_mapq = 0;
 my $intra_fragment = 0;
 my $unique = 0;
 #manual read id
-my $read1_id = 0;
-my $read2_id = 0;
 
 if (index($site_file, "none") != -1) {
    #no restriction enzyme, no need for RE distance
@@ -115,9 +113,10 @@ while (<>) {
 		$total_current++;
 		my $frag_1 = &get_paired_pos($record[0], $record[1], $record[2], $record[3], $record[9]);
 		my $frag_2 = &get_paired_pos($record[4], $record[5], $record[6], $record[7], $record[12]);
-		print "${$frag_1}[0]\t${$frag_1}[1]\t${$frag_1}[2]\t$read1_id\n${$frag_2}[0]\t${$frag_2}[1]\t${$frag_2}[2]\t$read2_id\n";
-        $read1_id++;
-        $read2_id++;
+		my ($strand1,$strand2);
+		if ( $record[0] == 0 ){ $strand1 = '+'} else{ $strand1 = '-'}
+		if ( $record[4] == 0 ){ $strand2 = '+'} else{ $strand2 = '-'}
+		print "${$frag_1}[0]\t${$frag_1}[1]\t${$frag_1}[2]\t$record[14]\t$strand1\n${$frag_2}[0]\t${$frag_2}[1]\t${$frag_2}[2]\t$record[15]\t$strand2\n";
 	}
 }
 
