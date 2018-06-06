@@ -59,7 +59,7 @@ for i in natural_sort(glob.glob('*1k.hic')):
 
         bin_num = np.max([hic_array['start'], hic_array['end']])/res + 1
 
-        bin_num_chr = bin_num_chr.append(bin_num)
+        bin_num_chr = np.append(bin_num_chr, bin_num)
 
     IF_al = IF_al/sum(IF_al)
     mean_IF = []

@@ -7,7 +7,7 @@ use vars qw/ $opt_s $opt_l $opt_d $opt_o $opt_q $opt_h /;
 # Check arguments
 getopts('s:l:o:q:h');
 
-my $site_file = "/broad/aidenlab/restriction_sites/hg19_DpnII.txt";
+#my $site_file = "/broad/aidenlab/restriction_sites/hg19_DpnII.txt";
 my $ligation_junction = "GATCGATC";
 my $stats_file = "stats.txt";
 my $mapq_threshold = 1;
@@ -34,7 +34,7 @@ if ($opt_q) {
   $mapq_threshold = $opt_q;
 }
 
-my $dangling_junction = substr $ligation_junction, length($ligation_junction)/2;
+#my $dangling_junction = substr $ligation_junction, length($ligation_junction)/2;
 
 # Global variables for calculating statistics
 my %chromosomes;
@@ -73,20 +73,6 @@ my $intra_fragment = 0;
 my $unique = 0;
 #manual read id
 
-if (index($site_file, "none") != -1) {
-   #no restriction enzyme, no need for RE distance
-}
-else {
-  # read in restriction site file and store as multidimensional array
-  open FILE, $site_file or die $!;
-  while (<FILE>) {
-    my @locs = split;
-    my $key = shift(@locs);
-    my $ref = \@locs;
-    $chromosomes{$key} = $ref;
-  }
-  close(FILE);
-}
 # read in infile and calculate statistics
 #open FILE, $infile or die $!;
 while (<>) {
@@ -95,12 +81,12 @@ while (<>) {
 	my $num_records = scalar(@record);
   # don't count as Hi-C contact if fails mapq or intra fragment test
 	my $countme = 1;
-
-	if (($record[1] eq $record[5]) && $record[3] == $record[7]) {
-		$intra_fragment++;
-		$countme = 0;
-	}
-	elsif ($num_records > 8) {
+  # for atac hi-c, do not remove intra_fragment
+  #  if (($record[1] eq $record[5]) && $record[3] == $record[7]) {
+  #      $intra_fragment++;
+  #      $countme = 0;
+  #  }
+	if ($num_records > 8) {
 		my $mapq_val = min($record[8],$record[11]);
 		if ($mapq_val < $mapq_threshold) {
 			$under_mapq++;
@@ -126,14 +112,8 @@ while (<>) {
 
 
 
-
-
-
-
-
-
 sub get_paired_pos {
-	if (!defined($chromosomes{$_[1]}[$index])) {next;}
+	#if (!defined($chromosomes{$_[1]}[$index])) {next;}
 	my $read_len; #set read length to adjust contact fragment ::: may need consider map cigar 
 	my $cigar = $_[4];
 	if($cigar =~ /(\d+)M/){
