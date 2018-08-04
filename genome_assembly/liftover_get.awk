@@ -38,6 +38,7 @@ END{
       print "chain", score, tName, tSize, tStrand, contig_start[-asm[k]], contig_end[-asm[k]], qName, qSize, qStrand, qStart, qEnd, id
       print  tSize
       qStart  = qEnd + 1
+      id++
     }
     else{
       qStrand = "+"
@@ -48,6 +49,7 @@ END{
       print "chain", score, tName, tSize, tStrand, contig_start[asm[k]], contig_end[asm[k]], qName, qSize, qStrand, qStart, qEnd, id
       print  tSize
       qStart  = qEnd + 1
+      id++
     }
     
     # add gap
