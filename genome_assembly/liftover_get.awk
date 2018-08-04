@@ -17,9 +17,9 @@ FILENAME == ARGV[1] && FNR == 1{
 # cprops file
 FILENAME == ARGV[2]{
   contig_len[$2]   = $3
-  contig_start[$2] = $ref_start
-  contig_end[$2]   = $ref_start + $3 - 1
-  $ref_start       = $ref_start + $3
+  contig_start[$2] = ref_start
+  contig_end[$2]   = ref_start + $3 - 1
+  ref_start        = ref_start + $3
 }
 END{
   qStart = 1
@@ -35,7 +35,8 @@ END{
       qSize   = tSize
       qEnd    = qStart + contig_len[-asm[k]] - 1
       score   = tSize * 80
-      print "chain", score, tName, tSize, tStrand, contig_start[-asm[k]], contig_end[-asm[k]], qName, qSize, qStrand, qStart, qEnd, id
+      contig  = -asm[k]
+      print "chain", score, tName, tSize, tStrand, contig_start[contig], contig_end[contig], qName, qSize, qStrand, qStart, qEnd, id
       print  tSize
       qStart  = qEnd + 1
       id++
@@ -46,7 +47,8 @@ END{
       qSize   = tSize
       qEnd    = qStart + contig_len[asm[k]] - 1
       score   = tSize * 80
-      print "chain", score, tName, tSize, tStrand, contig_start[asm[k]], contig_end[asm[k]], qName, qSize, qStrand, qStart, qEnd, id
+      contig  = asm[k]
+      print "chain", score, tName, tSize, tStrand, contig_start[contig], contig_end[contig], qName, qSize, qStrand, qStart, qEnd, id
       print  tSize
       qStart  = qEnd + 1
       id++
