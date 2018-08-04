@@ -1,4 +1,4 @@
-#!/usr/bin/awk
+#!/usr/bin/awk -f
 # input  : final.asm final.cprops 
 # output : liftover chain file
 
