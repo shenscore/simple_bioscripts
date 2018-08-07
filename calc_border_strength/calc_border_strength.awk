@@ -6,19 +6,19 @@ BEGIN{
   res = 5000
 }
 
-($2-$1)/res < block_size {
+($2-$1)/res < block_size && $3!="NaN" {
   for(i=$2/res + 1; i<= $1/res + 8; i++){
     block_A[i] += $3
   }
 }
 
-($2-$1)/res < block_size {
+($2-$1)/res < block_size && $3!="NaN" {
   for(i=$2/res - 8; i>0 && i<= $1/res - 1; i++){
     block_B[i] += $3
   }
 }
 
-($2-$1)/res <= block_size {
+($2-$1)/res <= block_size  && $3!="NaN" {
   for(i=($2+$1)/res/2 - ($2-$1)/res/2; i>0 && i <= ($2+$1)/res/2 + ($2-$1)/res/2; i++){
     block_C[i] += $3
   }
@@ -26,7 +26,7 @@ BEGIN{
 
 #TODO : when block_size is not even
 
-($2-$1)/res <= 2*block_size && ($2-$1)/res > block_size{
+($2-$1)/res <= 2*block_size && ($2-$1)/res > block_size  && $3!="NaN" {
   for (i=($2+$1)/res/2 - (($2-$1)/res/2 - block_size/2); i>0 && i<= ($2+$1)/res/2 + (($2-$1)/res/2 - block_size/2); i++){
     block_C[i] += $3
   }
@@ -34,7 +34,7 @@ BEGIN{
 
 
 END{
-  for(i=1;i<=max_bin;i++){
+  for(i=1;i<=NR;i++){
     if(i < block_size){print 0}
     else{
       if (i in block_A) {a=block_A[i]}
