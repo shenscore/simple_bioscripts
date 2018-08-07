@@ -1,9 +1,10 @@
+#!/usr/bin/awk -f
 # input : straw output of a chromosome
 # param : block_size
 
 BEGIN{
   block_size = 8
-  res = 5000
+  #res = 5000
 }
 
 ($2-$1)/res < block_size && $3!="NaN" {
@@ -35,7 +36,7 @@ BEGIN{
 
 END{
   for(i=1;i<=NR;i++){
-    if(i < block_size){print 0}
+    if(i <= block_size || i > NR - block_size){print 0}
     else{
       if (i in block_A) {a=block_A[i]}
       else{a=0}
