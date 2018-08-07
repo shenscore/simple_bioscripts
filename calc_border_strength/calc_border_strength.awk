@@ -14,13 +14,15 @@ BEGIN{
 }
 
 ($2-$1)/res < block_size && $3!="NaN" {
-  for(i=$2/res - 8; i>0 && i<= $1/res - 1; i++){
+  for(i=$2/res - 8; i<= $1/res - 1; i++){
+    if(i <= 0){continue}
     block_B[i] += $3
   }
 }
 
 ($2-$1)/res <= block_size  && $3!="NaN" {
-  for(i=($2+$1)/res/2 - ($2-$1)/res/2; i>0 && i <= ($2+$1)/res/2 + ($2-$1)/res/2; i++){
+  for(i=($2+$1)/res/2 - ($2-$1)/res/2; i <= ($2+$1)/res/2 + ($2-$1)/res/2; i++){
+    if(i <= 0){continue}
     block_C[i] += $3
   }
 }
@@ -28,7 +30,8 @@ BEGIN{
 #TODO : when block_size is not even
 
 ($2-$1)/res <= 2*block_size && ($2-$1)/res > block_size  && $3!="NaN" {
-  for (i=($2+$1)/res/2 - (($2-$1)/res/2 - block_size/2); i>0 && i<= ($2+$1)/res/2 + (($2-$1)/res/2 - block_size/2); i++){
+  for (i=($2+$1)/res/2 - (block_size - ($2-$1)/res/2); i<= ($2+$1)/res/2 + (block_size - ($2-$1)/res/2); i++){
+    if(i <= 0){continue}
     block_C[i] += $3
   }
 }
