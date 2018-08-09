@@ -11,7 +11,7 @@ BEGIN{
 }
 
 $2/res + 1 > max_bin{
-  max_bin = $2/res
+  max_bin = $2/res + 1
 }
 
 
@@ -29,8 +29,8 @@ $3 != "NaN" && ($2 - $1)/res <= block_size {
 
 END{
   for(i=1;i<=max_bin;i++){
-    if(!(i in A)){a = 0}
-    if(!(i in B)){b = 0}
+    if(!(i in A)){a = 0}else{a = A[i]}
+    if(!(i in B)){b = 0}else{b = B[i]}
     if(a == 0 && b== 0 || a == b){DI = 0} # avoid divide by 0 error
     else{
     e = (a+b)/2
