@@ -5,20 +5,28 @@
 BEGIN{
   block_size = 8
   #res = 5000
+  max_bin = 0
+}
+
+
+$2/res +1 > max_bin{
+  max_bin = $2/res + 1
 }
 
 ($2-$1)/res < block_size && $3!="NaN" {
+
   for(i=$2/res + 1; i<= $1/res + 8; i++){
     block_A[i] += $3
   }
-}
-
-($2-$1)/res < block_size && $3!="NaN" {
+  
   for(i=$2/res - 8; i<= $1/res - 1; i++){
     if(i <= 0){continue}
     block_B[i] += $3
   }
+  
 }
+
+
 
 ($2-$1)/res <= block_size  && $3!="NaN" {
   for(i=($2+$1)/res/2 - ($2-$1)/res/2; i <= ($2+$1)/res/2 + ($2-$1)/res/2; i++){
@@ -38,7 +46,7 @@ BEGIN{
 
 
 END{
-  for(i=1;i<=NR;i++){
+  for(i=1;i<=max_bin;i++){
     if(i <= block_size || i > NR - block_size){print 0}
     else{
       if (i in block_A) {a=block_A[i]}
