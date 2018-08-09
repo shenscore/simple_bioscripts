@@ -3,7 +3,7 @@
 # param : block_size
 
 BEGIN{
-  block_size = 8
+  #block_size = 8
   #res = 5000
   max_bin = 0
 }
