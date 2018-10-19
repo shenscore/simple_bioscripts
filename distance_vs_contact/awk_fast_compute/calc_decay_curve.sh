@@ -1,7 +1,7 @@
 hic_file=$1
 name=$(basename $hic_file .hic)
 # chromosome list
-chr_list=(1 2 3 4 5 6 7 8 9 10)
+chr_list=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X)
 res=5000
 norm='KR'
 #err_test=$(straw $norm $hic_file ${chr_list[0]} ${chr_list[0]} BP $res | cut -f3 | uniq | wc -l)
